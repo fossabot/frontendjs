@@ -30,16 +30,14 @@ function create(x){
       node = document.createElement(element),
       i = 1;
 
-  if (typeof child === "object" && child !== null && !isArray(child)) {
+  if (typeof child === "object" && child !== null && !isArray(child))
     for (var attr in child) node[attr] = child[attr];
     i = 2;
-  }
 
   let l = x.length;
-  for (; i < l; i++) {
+  for (; i < l; i++)
     if( isArray(x[i]) ) node.appendChild( create(x[i]) );
     else node.appendChild( document.createTextNode(x[i]) );
-  }
 
   return node;
 }

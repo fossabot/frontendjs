@@ -7,7 +7,6 @@ class Nav {
     this.node = document.getElementsByTagName(this.tag)[0];
   }
   add(x){
-    let fuck = x.length;
     let o = [];
     x.loop(function(p){
       let node = create(["a", {href:p[0]}, p[1]]);
@@ -22,6 +21,28 @@ class Nav {
   }
 }
 
+class Element {
+  constructor(tag){
+    this.tag = tag;
+  }
+  init(node){
+    node.appendChild(create([this.tag]));
+    this.node = document.getElementsByTagName(this.tag)[0];
+  }
+  add(x){
+    let o = [];
+    x.loop(function(p){
+      let node = create(["a", {href:p[0]}, p[1]]);
+      o.push(node);
+    });
+    for(let i = 0; i<o.length; i++ ) this.node.appendChild(o[i]);
+  }
+  set(x){
+    while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
+    this.node.appendChild(create(x));
+  }
+}
+
 window.onload = function(){
   // Header Object
   const header = new Nav("header");
@@ -30,40 +51,13 @@ window.onload = function(){
   const nav = new Nav("nav");
 
   // Main Object
-  const main = {
-    init(node){
-      node.appendChild(create(["main"]));
-      this.node = document.getElementsByTagName('main')[0];
-    },
-    set(x){
-      while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
-      this.node.appendChild(create(x));
-    }
-  }
+  const main = new Element("main");
 
   // Aside Object
-  const aside = {
-    init(node){
-      node.appendChild(create(["aside"]));
-      this.node = document.getElementsByTagName('aside')[0];
-    },
-    set(x){
-      while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
-      this.node.appendChild(create(x));
-    }
-  }
+  const aside = new Element("aside");
 
   // Footer Object
-  const footer = {
-    init(node){
-      node.appendChild(create(["footer"]));
-      this.node = document.getElementsByTagName('footer')[0];
-    },
-    set(x){
-      while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
-      this.node.appendChild(create(x));
-    }
-  }
+  const footer = new Element("footer");
 
   // INIT();
   header.init(document.body);
