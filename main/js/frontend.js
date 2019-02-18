@@ -1,39 +1,38 @@
+class Nav {
+  constructor(tag){
+    this.tag = tag;
+  }
+  init(node){
+    node.appendChild(create([this.tag]));
+    this.node = document.getElementsByTagName(this.tag)[0];
+  }
+  add(x){
+    let fuck = x.length;
+    let o = [];
+    x.loop(function(p){
+      let node = create(["a", {href:p[0]}, p[1]]);
+      o.push(node);
+    });
+    for(let i = 0; i<o.length; i++ ) this.node.appendChild(o[i]);
+  }
+  set(x){
+    let o = x;
+    while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
+    this.add(o);
+  }
+}
+
 window.onload = function(){
-  const header = {
-    init(){
-      document.body.appendChild(create(["header"]));
-      this.node = document.getElementsByTagName('header')[0];
-    },
-    add(x){
-      x.loop(function(p){
-        header.node.appendChild(create(["a", {href:p[0]}, p[1]]));
-      });
-    },
-    set(x){
-      while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
-      this.add(x);
-    }
-  }
+  // Header Object
+  const header = new Nav("header");
 
-  const nav = {
-    init(){
-      document.body.appendChild(create(["nav"]));
-      this.node = document.getElementsByTagName('nav')[0];
-    },
-    add(x){
-      x.loop(function(p){
-        nav.node.appendChild(create(["a", {href:p[0]}, p[1]]));
-      });
-    },
-    set(x){
-      while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
-      this.add(x);
-    }
-  }
+  // Nav Object
+  const nav = new Nav("nav");
 
+  // Main Object
   const main = {
-    init(){
-      document.body.appendChild(create(["main"]));
+    init(node){
+      node.appendChild(create(["main"]));
       this.node = document.getElementsByTagName('main')[0];
     },
     set(x){
@@ -42,9 +41,10 @@ window.onload = function(){
     }
   }
 
+  // Aside Object
   const aside = {
-    init(){
-      document.body.appendChild(create(["aside"]));
+    init(node){
+      node.appendChild(create(["aside"]));
       this.node = document.getElementsByTagName('aside')[0];
     },
     set(x){
@@ -53,9 +53,10 @@ window.onload = function(){
     }
   }
 
+  // Footer Object
   const footer = {
-    init(){
-      document.body.appendChild(create(["footer"]));
+    init(node){
+      node.appendChild(create(["footer"]));
       this.node = document.getElementsByTagName('footer')[0];
     },
     set(x){
@@ -65,20 +66,22 @@ window.onload = function(){
   }
 
   // INIT();
-  header.init();
-  nav.init();
-  main.init();
-  aside.init();
-  footer.init();
+  header.init(document.body);
+  nav.init(document.body);
+  main.init(document.body);
+  aside.init(document.body);
+  footer.init(document.body);
 
   // SET
   header.set([["#","Login"],["#","Signup"]]);
   nav.set([["#","Home"],["#","Community"]]);
 
   // TEST
+
   main.set(["a", {href: "#", id: "btn"}, "click or die"]);
   var test = document.getElementById("btn");
   test.addEventListener("click",function(){
-    nav.set([["#","potato"],["#","LUL"]]);
+    header.add([["#","potato"],["#","LUL"]]);
   });
+
 }// onload END
