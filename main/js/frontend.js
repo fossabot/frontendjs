@@ -3,21 +3,32 @@ class Nav {
     this.tag = tag;
   }
   init(node){
-    node.appendChild(create([this.tag]));
+    node.appendChild( create([this.tag]) );
     this.node = document.getElementsByTagName(this.tag)[0];
   }
   add(x){
-    let o = [];
-    x.loop(function(p){
-      let node = create(["a", {href:p[0]}, p[1]]);
-      o.push(node);
-    });
-    for(let i = 0; i<o.length; i++ ) this.node.appendChild(o[i]);
+    /* Check if the second value is an array.
+    * true = [["a", {href:"#", id:"testadd"}, "add"],["a", {href:"#", id:"testset"}, "set"]]
+    * false = ["a", {href:"#", id:"testadd"}, "add"]
+    */
+    if( x[1] instanceof Array ){
+      let o = [],
+          i = 0,
+          l = x.length;
+      x.loop(function(p){
+        // Push all created objects into an array.
+        o.push( create(["a", {href:p[0]}, p[1]]) );
+      });
+      // Loop thru the array to add all nodes into the parent node.
+      for(; i<l; i++ ) this.node.appendChild(o[i]);
+    }else{
+      // Add a single node to the parent.
+      this.node.appendChild( create(["a", {href:x[0]}, x[1]]) );
+    }
   }
   set(x){
-    let o = x;
     while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
-    this.add(o);
+    this.add(x);
   }
 }
 
@@ -26,40 +37,43 @@ class Element {
     this.tag = tag;
   }
   init(node){
-    node.appendChild(create([this.tag]));
+    node.appendChild( create([this.tag]) );
     this.node = document.getElementsByTagName(this.tag)[0];
   }
   add(x){
-    let o = [];
-    x.loop(function(p){
-      let node = create(["a", {href:p[0]}, p[1]]);
-      o.push(node);
-    });
-    for(let i = 0; i<o.length; i++ ) this.node.appendChild(o[i]);
+    /* Check if the second value is an array.
+    * true = [["a", {href:"#", id:"testadd"}, "add"],["a", {href:"#", id:"testset"}, "set"]]
+    * false = ["a", {href:"#", id:"testadd"}, "add"]
+    */
+    if( x[1] instanceof Array ){
+      let o = [],
+          i = 0,
+          l = x.length;
+      x.loop(function(p){
+        // Push all created objects into an array.
+        o.push( create(p) );
+      });
+      // Loop thru the array to add all nodes into the parent node.
+      for(; i<l; i++ ) this.node.appendChild(o[i]);
+    }else{
+      // Add a single node to the parent.
+      this.node.appendChild( create(x) );
+    }
   }
   set(x){
     while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
-    this.node.appendChild(create(x));
+    this.add(x);
   }
 }
 
 window.onload = function(){
   // Header Object
-  const header = new Nav("header");
-
-  // Nav Object
-  const nav = new Nav("nav");
-
-  // Main Object
-  const main = new Element("main");
-
-  // Aside Object
-  const aside = new Element("aside");
-
-  // Footer Object
-  const footer = new Element("footer");
-
-  // INIT();
+  const header = new Nav("header"),
+        nav = new Nav("nav"),
+        main = new Element("main"),
+        aside = new Element("aside"),
+        footer = new Element("footer");
+  // INIT(); Add nodes to the body element.
   header.init(document.body);
   nav.init(document.body);
   main.init(document.body);
@@ -70,12 +84,16 @@ window.onload = function(){
   header.set([["#","Login"],["#","Signup"]]);
   nav.set([["#","Home"],["#","Community"]]);
 
-  // TEST
+  //main.set([["a", {href:"#", id:"testadd"}, "add"],["a", {href:"#", id:"testset"}, "set"]]);
+  main.set([["a", {href:"#", id:"testadd"}, "add"],["a", {href:"#", id:"testset"}, "set"]]);
 
-  main.set(["a", {href: "#", id: "btn"}, "click or die"]);
-  var test = document.getElementById("btn");
-  test.addEventListener("click",function(){
-    header.add([["#","potato"],["#","LUL"]]);
+  var testadd = document.getElementById("testadd");
+  var testset = document.getElementById("testset");
+  testadd.addEventListener("click",function(){
+    nav.add(["#","Home"]);
+  });
+  testset.addEventListener("click",function(){
+    nav.set([["#","hi"],["#","bye"]]);
   });
 
 }// onload END

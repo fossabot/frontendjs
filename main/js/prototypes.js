@@ -6,7 +6,7 @@ Object.prototype.loop = function(func) {
 
 
 // AJAX CALL
-const ajax = (file,method,formData) => {
+function ajax(file,method,formData){
   fetch(file, {
     method: method,
     body: formData
