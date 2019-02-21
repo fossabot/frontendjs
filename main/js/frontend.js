@@ -6,7 +6,7 @@ window.onload = function(){
   nav = new Nav("nav"),
   main = new Element("main"),
   aside = new Element("aside"),
-  footer = new Element("footer");
+  footer = new Nav("footer");
 
   // Add nodes to the body element.
   header.init(document.body);
@@ -18,29 +18,25 @@ window.onload = function(){
   // Set objects inner html?
   header.set([["#","Login"],["#","Signup"]]);
   nav.set([["#","Home"],["#","Community"]]);
-
+  footer.add(["https://github.com/damiantoczek/frontend", "Github"]);
 
   // Testing form
   const signupForm = new Form("signup");
-  // How to add it into main? prototype signupForm.push(main.node); ???
-  signupForm.init(document.body);
+  signupForm.init(main.node);
   // Maybe create labels if first param = "input" ?
   signupForm.add([ ["username"], ["password"], ["email"] ]);
 
 
-
-
-
 // Test Button
-  main.set([["a", {href:"#", id:"testadd"}, "add"],["a", {href:"#", id:"testset"}, "set"]]);
+  main.add([["a", {href:"#", id:"testadd"}, "add"],["a", {href:"#", id:"testset"}, "set"]]);
 
   var testadd = document.getElementById("testadd");
   var testset = document.getElementById("testset");
   testadd.addEventListener("click",function(){
-    nav.add(["#","Home"]);
+    nav.add(["#","We Love JS!"]);
   });
   testset.addEventListener("click",function(){
-    nav.set([["#","hi"],["#","bye"]]);
+    nav.set([["#","U"],["#","Mad?"]]);
   });
 
 

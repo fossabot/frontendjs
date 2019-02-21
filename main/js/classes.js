@@ -1,10 +1,11 @@
 class Nav {
   constructor(tag){
     this.tag = tag;
+    this.node = create([this.tag]);
   }
   init(node){
-    node.appendChild( create([this.tag]) );
-    this.node = document.getElementsByTagName(this.tag)[0];
+    node.appendChild( this.node );
+    this.element = document.getElementsByTagName(this.tag)[0];
   }
   add(x){
     /* Check if the second value is an array.
@@ -35,10 +36,11 @@ class Nav {
 class Element {
   constructor(tag){
     this.tag = tag;
+    this.node = create([this.tag]);
   }
   init(node){
-    node.appendChild( create([this.tag]) );
-    this.node = document.getElementsByTagName(this.tag)[0];
+    node.appendChild( this.node );
+    this.element = document.getElementsByTagName(this.tag)[0];
   }
   add(x){
     /* Use example:
@@ -61,6 +63,14 @@ class Element {
       // Add a single node to the parent.
       this.node.appendChild( create(x) );
     }
+
+    // TESTING
+    // something.add(myElement);
+    if(x instanceof Form || x instanceof Element){
+      console.log(x.nodeType);
+      var list = this.element;    // Get the <ul> element to insert a new node
+      list.insertBefore(x, list.childNodes[0]);
+    }
   }
   set(x){
     while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
@@ -71,12 +81,13 @@ class Element {
 class Form {
   constructor(id){
     this.id = id;
+    // Create the main "init" node.
+    this.node = create(["form", { id:this.id }]);
   }
   init(node){
-    // Create the main "init" node.
-    node.appendChild( create(["form", { id:this.id }]) );
+    node.appendChild( this.node );
     // Set the node param.
-    this.node = document.getElementById(this.id);
+    this.element = document.getElementById(this.id);
   }
   add(x){
     // Example of use:
