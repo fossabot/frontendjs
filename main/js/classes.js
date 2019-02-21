@@ -82,18 +82,27 @@ class Form {
     // Example of use:
     // Multiple -> signupForm.add([["username"],["password"]]);
     // Single -> signupForm.add(["username"]);
+    const inputType = function(x){
+      // let attr be the default attributes.
+      let attr = { id:x, name:x, placeholder:x};
+      // Check if there is any valid input type for this input field.
+      if(x == "username" || x == "password" || x == "email") attr = { id:x, type:x, name:x, placeholder:x};
+      return attr;
+    }
     let o = [], // let o be the output array.
         i = 0; // let i be the index counter.
 
     if( x[1] instanceof Array ){ // Check if the second value is an array.
       // Create the nodes and push them into the output array.
       x.loop(function(p){
+        // Push the label into the output array.
         o.push( create(["label", { for:p[0] }, p[0]])  );
-        o.push( create(["input", { id:p[0], name:p[0], placeholder:p[0]}, p[0]])  );
+        o.push( create(["input", inputType(p[0]), p[0]])  );
       });
     }else{
-      o.push( create(["label", { for:x[0] }, x[0]])  );
-      o.push( create(["input", { id:x[0], name:x[0], placeholder:x[0]}, x[0]])  );
+      // Push the label into the output array.
+      o.push( create(["label", { for:p[0] }, p[0]])  );
+      o.push( create(["input", inputType(p[0]), p[0]])  );
     }
 
     // Create a submit button.
