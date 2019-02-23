@@ -17,3 +17,5 @@ footer.init(document.body);
 header.set([["/loginsystem/index.php","Login"],["/loginsystem/index.php","Signup"]]);
 nav.set([["/","Home"],["#","Community"]]);
 footer.add(["https://github.com/damiantoczek/frontend", "Github"]);
+
+main.add(["h1","Hello World!"]);
