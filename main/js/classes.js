@@ -14,12 +14,12 @@ class Nav {
     */
     if( x[1] instanceof Array ){
       let o = [],
-          i = 0,
-          l = x.length;
+          i = 0;
       x.loop(function(p){
         // Push all created objects into an array.
         o.push( create(["a", { href:p[0] }, p[1]]) );
       });
+      let l = x.length;
       // Loop thru the array to add all nodes into the parent node.
       for(; i<l; i++ ) this.node.appendChild(o[i]);
     }else{
