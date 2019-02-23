@@ -4,9 +4,10 @@
   font-family: Calibri
   box-sizing: border-box
 
-a
+a,input[type="submit"]
   text-decoration: none
   &:hover
+    cursor: pointer
     text-decoration: underline
 
 body
@@ -28,8 +29,20 @@ nav
     color: #111
 
 form
+  display: table
+  border: 1px solid #333
+  border-radius: 6px
+  margin: 1em auto
+  padding: .5em 1em
   label,input
     display: block
+    padding: .1em .2em
+    &[type="submit"]
+      border: 0
+      background: transparent
+      font-weight: bold
+      float: right
+      padding: .5em 1em 0 1em
 
 ul
   list-style-position: inside

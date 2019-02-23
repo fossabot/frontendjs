@@ -63,14 +63,6 @@ class Element {
       // Add a single node to the parent.
       this.node.appendChild( create(x) );
     }
-
-    // TESTING
-    // something.add(myElement);
-    if(x instanceof Form || x instanceof Element){
-      console.log(x.nodeType);
-      var list = this.element;    // Get the <ul> element to insert a new node
-      list.insertBefore(x, list.childNodes[0]);
-    }
   }
   set(x){
     while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
@@ -79,15 +71,17 @@ class Element {
 }
 
 class Form {
-  constructor(id){
-    this.id = id;
+  // Use example:
+  // const signupForm = new Form({id:"signup", action: "index.php", method: "POST"});
+  constructor(attr){
+    if(attr.id) this.id = attr.id;
     // Create the main "init" node.
-    this.node = create(["form", { id:this.id }]);
+    this.node = create(["form", attr]);
   }
   init(node){
     node.appendChild( this.node );
     // Set the node param.
-    this.element = document.getElementById(this.id);
+    if(this.id) this.element = document.getElementById(this.id);
   }
   add(x){
     // Example of use:
