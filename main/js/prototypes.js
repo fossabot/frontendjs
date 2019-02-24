@@ -19,31 +19,19 @@ function ajax(file,method,formData){
   });
 }
 
-// Check if it's an array.
-function isArray(x){
-  return x instanceof Array;
-}
+// Form listener for Ajax
+let forms = e('form');
+console.dir(forms);
 
-// Create a JS element.
-// create(["a", { href: "#"}, "myLink"]);
-function create(x){
-  let element = x[0],
-      child = x[1],
-      node = document.createElement(element),
-      i = 1;
-
-  if (typeof child === "object" && child !== null && !isArray(child)){
-    for (let attr in child) node[attr] = child[attr];
-    i = 2;
-  }
-
-  let l = x.length;
-  for (; i < l; i++){
-    if( isArray(x[i]) ) node.appendChild( create(x[i]) );
-    else node.appendChild( document.createTextNode(x[i]) );
-  }
-
-  return node;
+for (var i = 0; i < forms.length; i++) {
+  forms[i].addEventListener('submit', function(e){
+		e.preventDefault();
+		const formData = new FormData(this),
+			method = 'POST',
+			action = this.getAttribute('action');
+		ajax(action,method,formData);
+		this.reset();
+	});
 }
 
 function innerNode(newNode, node) {
