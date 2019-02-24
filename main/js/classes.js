@@ -1,7 +1,6 @@
 class Nav {
-  constructor(tag){
-    this.tag = tag;
-    this.node = create([this.tag]);
+  constructor(array){
+    this.node = create(array);
   }
   init(node){
     node.appendChild( this.node );
@@ -34,9 +33,9 @@ class Nav {
 }
 
 class Element {
-  constructor(tag){
-    this.tag = tag;
-    this.node = create([this.tag]);
+  constructor(array){
+    // Create the main "init" node.
+    this.node = create(array);
   }
   init(node){
     node.appendChild( this.node );

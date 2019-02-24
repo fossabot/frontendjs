@@ -1,9 +1,11 @@
 Object.prototype.loop = function(func) {
-    const L = this.length;
+    const l = this.length;
     let i = 0;
-    for (; i < L; i++) func(this[i]);
+    for (; i < l; i++) func(this[i]);
 }
 
+const e = (tag) => document.getElementsByTagName(tag),
+     id = (id) => document.getElementById(id);
 
 // AJAX CALL
 function ajax(file,method,formData){
@@ -13,7 +15,7 @@ function ajax(file,method,formData){
   }).then(function(res){
     return res.text();
   }).then(function(text){
-    router(text);
+    console.log(text);
   });
 }
 
