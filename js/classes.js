@@ -4,6 +4,7 @@ Object.prototype.loop = function(func) {
     for (; i < l; i++) func(this[i]);
 }
 
+
 class Nav {
   constructor(array){
     this.node = create(array);
