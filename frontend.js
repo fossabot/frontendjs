@@ -1,33 +1,64 @@
-// Loop with callback, faster than forEach, while and about 10% slower than native for() loop.
-Object.prototype.loop = function(func) {
-    const l = this.length;
-    let i = 0;
-    for (; i < l; i++) func(this[i]);
-}
-
 // id("myTitle").textContent = "Hello World";
 function id(id){ return document.getElementById(id); }
 
 // e("p")[0].textContent = "Hello World";
 function e(tag){ return document.getElementsByTagName(tag); }
 
-// Create a element node.
-function create(array){ // create(["a", { href: "#"}, "myLink"]);
-  const isArray = (array) => array instanceof Array;
-  let element = array[0],
-      child = array[1],
-      node = document.createElement(element),
-      i = 1;
+// Is array?
+function isArray(obj){
+  return obj instanceof Array;
+}
 
+// Is string?
+function isString(obj){
+  return typeof obj === 'string';
+}
+
+// Create a element node.
+// ["div", { className:"infoBox" }, "This is a textNode inside the div."];
+function createNode(array){
+
+  let
+  // get second array element.
+  child = array[1],
+  // set the loop index to 1.
+  i = 1,
+  // create a node out of first array element.
+  // Array[0] is the tagname.
+  node = document.createElement( array[0] );
+
+  // If child is an object, not an array, create attributes.
   if (typeof child === "object" && child !== null && !isArray(child)){
+
+    // Child parameter is a object that contains the attributes.
+    // document.createElement(tagName, [options]);
+    // Options are the attributes defined in the child key:value object.
     for (let attr in child) node[attr] = child[attr];
+
+    // Set the loop index to 2.
     i = 2;
   }
 
+  // Get the array length.
   let l = array.length;
+
+  // Loop the array.
   for (; i < l; i++){
-    if( isArray(array[i]) ) node.appendChild( create(array[i]) );
-    else node.appendChild( document.createTextNode(array[i]) );
+    console.log( array[i] );
+
+    // If "array[i]" is an array: append it do the parent node.
+    // create(["parent", { className:"Attributes" }, ["Second_Element_Inside_parent", "Text Node"]]);
+    if( isArray(array[i]) ){
+
+      // Create a child node. create(array[i])
+      // Append it to the parent node. node.appendChild(...);
+      node.appendChild( create(array[i]) );
+
+    }else
+
+      // If it's not a array or object, create a text node. document.createTextNode(array[i])
+      // Append the textNode to the parent node. node.appendChild(...);
+      node.appendChild( document.createTextNode(array[i]) );
   }
 
   return node;
@@ -36,10 +67,10 @@ function create(array){ // create(["a", { href: "#"}, "myLink"]);
 // Creating basic elements.
 class Element {
   constructor(array){
-    // Create the main "init" node.
+    // Create the main "r" node.
     this.node = create(array);
   }
-  init(node){
+  r(node){
     node.appendChild( this.node );
     this.element = e(this.tag)[0];
   }
@@ -52,7 +83,7 @@ class Element {
       let o = [],
           i = 0;
 
-      array.loop(function(p){
+      array.forEach(function(p){
         // Push all created objects into the output array.
         o.push( create(p) );
       });
@@ -75,7 +106,7 @@ class Nav {
   constructor(array){
     this.node = create(array);
   }
-  init(node){
+  r(node){
     node.appendChild( this.node );
     this.element = document.getElementsByTagName(this.tag)[0];
   }
@@ -87,7 +118,7 @@ class Nav {
     if( array[1] instanceof Array ){
       let o = [],
           i = 0;
-      array.loop(function(p){
+      array.forEach(function(p){
         // Push all created objects into an array.
         o.push( create(["a", { id:p[0] }, p[1]]) );
       });
@@ -108,10 +139,10 @@ class Nav {
 class Form { // const signupForm = new Form({id:"signup", action: "index.php", method: "POST"});
   constructor(attr){
     if(attr.id) this.id = attr.id;
-    // Create the main "init" node.
+    // Create the main "r" node.
     this.node = create(["form", attr]);
   }
-  init(node){
+  r(node){
     node.appendChild( this.node );
     // Set the node param.
     if(this.id) this.element = document.getElementById(this.id);
@@ -132,7 +163,7 @@ class Form { // const signupForm = new Form({id:"signup", action: "index.php", m
 
     if( x[1] instanceof Array ){ // Check if the second value is an array.
       // Create the nodes and push them into the output array.
-      x.loop(function(p){
+      x.forEach(function(p){
         // Push the label into the output array.
         o.push( create(["label", { for:p[0] }, p[0]])  );
         o.push( create(["input", inputType(p[0]), p[0]])  );
@@ -158,22 +189,36 @@ class Form { // const signupForm = new Form({id:"signup", action: "index.php", m
   }
 }
 
-// Create Objects
-var
-header = new Element(["header"]),
-nav = new Nav(["nav"]);
-main = new Element(["main"]),
-aside = new Element(["aside"]),
-footer = new Element(["footer"]);
+// PROTOTYPE
 
-// Add nodes to the body element.
-header.init(document.body);
-nav.init(document.body);
-main.init(document.body);
-aside.init(document.body);
-footer.init(document.body);
+function create(array,target = document.body ){
 
-// Set objects inner html?
-header.add([ ["span", { id: "pageName" }, "frontendjs"], ["span", { id: "pageDomain" }, ".org"] ]);
-nav.add([ ["home","Home"], ["docs","Docs"] ]);
-footer.add(["span", "GNU GENERAL PUBLIC LICENSE v3"]);
+  // Check if a single element is created.
+  // True = ["div", { className:"demo" }, ["p","my paragraph inside the div."]];
+  // False = [ ["div", "first"], ["div", "second"] ];
+  if( isString(array[0]) ){
+
+    // Add the created element into the target element.
+    // By default it's the body element.
+    target.appendChild( createNode(array) );
+
+  } else {
+    // Let output store all created element nodes.
+    let output = [];
+
+    // Create and add all elements to the output array.
+    array.forEach(function(x){
+      output.push( createNode(x) );
+    });
+
+    // Loop all elements into the target element.
+    // By default it's the body element.
+    output.forEach(function(x){
+      target.appendChild( x );
+    });
+  }
+
+}
+let elem = ["code", ["pre", "console.log('Hello World!');"], ["pre", "Hello"]];
+let multi = [["p","Hello "],["p", "World!" ]];
+let testNode = create( elem );
