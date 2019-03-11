@@ -25,7 +25,16 @@ function create(array){
     When creating an Element, the first value is always the elements tagname. It will result true.
     It will take the first value and create a node.
     After creating the node element, it will check if the second value is an object.
-    This will add attributes like className, id, href etc to your node element.
+    This will add attributes like className, id, href etc to your node element and set the "i" variable to 2.
+    array[0] is the tagname
+    array[1] can be a object for the attributes, string to add a textnode or another array to add another node into the current node.
+    array[2] can be a string to add a textnode or an array to create another node inside the current node.
+    If the index "i" variable is set to 2, so it will skip the first and second value and loop the third one.
+    If the third one is an array, it runs another create() function call.
+    So things like this are possible:
+    create(["p", ["span","Hello World!"]])
+    or this
+    create(["p", ["span","Hello "], ["span","World!"]])
 
   */
   let arr0 = array[0],
@@ -52,7 +61,11 @@ function create(array){
 
     let l = array.length;
     for (; i < l; i++){
+      console.log(array[i]);
+      // This if statement is triggered when create(["div", ["p","frontend.js"]]);
       if( isArray(array[i]) ) node.appendChild( create(array[i]) );
+
+      // If the second or third value is an string, create a text node.
       else node.appendChild( document.createTextNode(array[i]) );
     }
 
@@ -60,15 +73,12 @@ function create(array){
   }
 }
 
-let solo = create(['div',{ className:"text" }, "Hello"]);
-console.warn("solo");
-console.log(solo);
-document.body.appendChild(solo);
+// Examples
+document.body.appendChild(create(["p", "Hello World!"]));
+document.body.appendChild(create(["p", ["span","Hello World!"]]));
+document.body.appendChild(create(["p", ["span","Hello "], ["span","World!"]]));
+// Not working, line 63 needs an upgrade. -> document.body.appendChild(create(["p", [ ["span","Hello "], ["span","World!"] ]]));
 
-let multi = create([ ['div', { className:"text" }, "HelloWorld!"], ['div', { className:"text" }, "This is my Page"] ]);
-console.warn("multi");
-console.log(multi);
-
-multi.forEach(function(val){
-  document.body.appendChild(val);
+create([["span","Hello "], ["span","World!"]]).forEach(function(node){
+  document.body.appendChild(node);
 });
