@@ -75,10 +75,19 @@ function create(array){
 
 // Examples
 document.body.appendChild(create(["p", "Hello World!"]));
+// <p>Hello World!</p>
 document.body.appendChild(create(["p", ["span","Hello World!"]]));
+// <p><span>Hello World!</span></p>
 document.body.appendChild(create(["p", ["span","Hello "], ["span","World!"]]));
+// <p><span>Hello </span><span>World!</span></p>
+
+
 // Not working, line 63 needs an upgrade. -> document.body.appendChild(create(["p", [ ["span","Hello "], ["span","World!"] ]]));
 
 create([["span","Hello "], ["span","World!"]]).forEach(function(node){
   document.body.appendChild(node);
 });
+
+var header = new Element(["header"]);
+header.r();
+header.add(["p","Works!"]);
