@@ -1,179 +1,93 @@
-// Loop with callback, faster than forEach, while and about 10% slower than native for() loop.
-Object.prototype.loop = function(func) {
-    const l = this.length;
-    let i = 0;
-    for (; i < l; i++) func(this[i]);
-}
+// Is array?
+function isArray(array){ return array instanceof Array; }
 
-// id("myTitle").textContent = "Hello World";
-function id(id){ return document.getElementById(id); }
+// Is string?
+function isString(string){ return typeof string === 'string'; }
 
-// e("p")[0].textContent = "Hello World";
-function e(tag){ return document.getElementsByTagName(tag); }
+// Is string?
+function isObject(object){ return typeof object === 'object'; }
 
 // Create a element node.
-function create(array){ // create(["a", { href: "#"}, "myLink"]);
-  const isArray = (array) => array instanceof Array;
-  let element = array[0],
-      child = array[1],
-      node = document.createElement(element),
-      i = 1;
+function create(array){
+  /* This function can create a single and multiple elements.
 
-  if (typeof child === "object" && child !== null && !isArray(child)){
-    for (let attr in child) node[attr] = child[attr];
-    i = 2;
+    If I forget how this works I will slap myself ;_; - Damian 2K19
+
+    To create one element, it needs an array:
+    create(['div',{ className:"text" }, "Hello"]);
+
+    To create multiple Elements it takes an multidimensional array:
+    create([ ['div', { className:"text" }, "HelloWorld!"], ['div', { className:"text" }, "This is my Page"] ]);
+
+    Lets explain first the single element flow.
+    The first if statement checks for an multidimensional array. If not, nothing happens.
+    The second if statement checks if the first array value is an string.
+    When creating an Element, the first value is always the elements tagname. It will result true.
+    It will take the first value and create a node.
+    After creating the node element, it will check if the second value is an object.
+    This will add attributes like className, id, href etc to your node element and set the "i" variable to 2.
+    array[0] is the tagname
+    array[1] can be a object for the attributes, string to add a textnode or another array to add another node into the current node.
+    array[2] can be a string to add a textnode or an array to create another node inside the current node.
+    If the index "i" variable is set to 2, so it will skip the first and second value and loop the third one.
+    If the third one is an array, it runs another create() function call.
+    So things like this are possible:
+    create(["p", ["span","Hello World!"]])
+    or this
+    create(["p", ["span","Hello "], ["span","World!"]])
+
+  */
+  let arr0 = array[0],
+      arr1 = array[1];
+
+  if( isArray(arr0) && isArray(arr1) ){
+    let nodes = [];
+
+    array.forEach(function(value){
+      nodes.push(create(value));
+    });
+
+    return nodes;
   }
 
-  let l = array.length;
-  for (; i < l; i++){
-    if( isArray(array[i]) ) node.appendChild( create(array[i]) );
-    else node.appendChild( document.createTextNode(array[i]) );
-  }
+  if( isString(arr0) ){
+    let node = document.createElement(arr0),
+        i = 1;
 
-  return node;
-}
-
-// Creating basic elements.
-class Element {
-  constructor(array){
-    // Create the main "init" node.
-    this.node = create(array);
-  }
-  init(node){
-    node.appendChild( this.node );
-    this.element = e(this.tag)[0];
-  }
-  add(array){
-    /* Use example:
-    * Multiple (true) = [["a", {href:"#", id:"testadd"}, "add"],["a", {href:"#", id:"testset"}, "set"]]
-    * Single (false) = ["a", {href:"#", id:"testadd"}, "add"]
-    */
-    if( array[1] instanceof Array ){
-      let o = [],
-          i = 0;
-
-      array.loop(function(p){
-        // Push all created objects into the output array.
-        o.push( create(p) );
-      });
-
-      let l = o.length; // let l be the array length.
-      // Loop thru the array to add all nodes into the parent node.
-      for(; i<l; i++ ) this.node.appendChild(o[i]);
-    }else{
-      // Add a single node to the parent.
-      this.node.appendChild( create(array) );
+    if ( isObject(arr1) && arr1 !== null && !isArray(arr1) ){
+      for (let attr in arr1) node[attr] = arr1[attr];
+      i = 2;
     }
-  }
-  set(array){
-    while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
-    this.add(array);
-  }
-}
 
-class Nav {
-  constructor(array){
-    this.node = create(array);
-  }
-  init(node){
-    node.appendChild( this.node );
-    this.element = document.getElementsByTagName(this.tag)[0];
-  }
-  add(array){
-    /* Check if the second value is an array.
-    * true = [["a", {href:"#", id:"testadd"}, "add"],["a", {href:"#", id:"testset"}, "set"]]
-    * false = ["a", {href:"#", id:"testadd"}, "add"]
-    */
-    if( array[1] instanceof Array ){
-      let o = [],
-          i = 0;
-      array.loop(function(p){
-        // Push all created objects into an array.
-        o.push( create(["a", { id:p[0] }, p[1]]) );
-      });
-      let l = array.length;
-      // Loop thru the array to add all nodes into the parent node.
-      for(; i<l; i++ ) this.node.appendChild(o[i]);
-    }else{
-      // Add a single node to the parent.
-      this.node.appendChild( create(["a", {href:array[0]}, array[1]]) );
+    let l = array.length;
+    for (; i < l; i++){
+      console.log(array[i]);
+      // This if statement is triggered when create(["div", ["p","frontend.js"]]);
+      if( isArray(array[i]) ) node.appendChild( create(array[i]) );
+
+      // If the second or third value is an string, create a text node.
+      else node.appendChild( document.createTextNode(array[i]) );
     }
-  }
-  set(array){
-    while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
-    this.add(array);
+
+      return node;
   }
 }
 
-class Form { // const signupForm = new Form({id:"signup", action: "index.php", method: "POST"});
-  constructor(attr){
-    if(attr.id) this.id = attr.id;
-    // Create the main "init" node.
-    this.node = create(["form", attr]);
-  }
-  init(node){
-    node.appendChild( this.node );
-    // Set the node param.
-    if(this.id) this.element = document.getElementById(this.id);
-  }
-  add(x){
-    // Example of use:
-    // Multiple -> signupForm.add([["username"],["password"]]);
-    // Single -> signupForm.add(["username"]);
-    const inputType = function(x){
-      // let attr be the default attributes.
-      let attr = { id:x, name:x, placeholder:x};
-      // Check if there is any valid input type for this input field.
-      if(x == "username" || x == "password" || x == "email") attr.type = x;
-      return attr;
-    }
-    let o = [], // let o be the output array.
-        i = 0; // let i be the index counter.
+// Examples
+document.body.appendChild(create(["p", "Hello World!"]));
+// <p>Hello World!</p>
+document.body.appendChild(create(["p", ["span","Hello World!"]]));
+// <p><span>Hello World!</span></p>
+document.body.appendChild(create(["p", ["span","Hello "], ["span","World!"]]));
+// <p><span>Hello </span><span>World!</span></p>
 
-    if( x[1] instanceof Array ){ // Check if the second value is an array.
-      // Create the nodes and push them into the output array.
-      x.loop(function(p){
-        // Push the label into the output array.
-        o.push( create(["label", { for:p[0] }, p[0]])  );
-        o.push( create(["input", inputType(p[0]), p[0]])  );
-      });
-    }else{
-      // Push the label into the output array.
-      o.push( create(["label", { for:p[0] }, p[0]])  );
-      o.push( create(["input", inputType(p[0]), p[0]])  );
-    }
 
-    // Create a submit button.
-    o.push( create(["input", { type:"submit", value:"submit"}]) );
+// Not working, line 63 needs an upgrade. -> document.body.appendChild(create(["p", [ ["span","Hello "], ["span","World!"] ]]));
 
-    let l = o.length; // Let l be the length of the output array.
-    // Append all nodes to "this.node" from the output array.
-    for(; i<l; i++){
-      this.node.appendChild(o[i]);
-    }
-  }
-  set(x){
-    while( this.node.lastChild ) this.node.removeChild(this.node.lastChild);
-    this.add(x);
-  }
-}
+create([["span","Hello "], ["span","World!"]]).forEach(function(node){
+  document.body.appendChild(node);
+});
 
-// Create Objects
-var
-header = new Element(["header"]),
-nav = new Nav(["nav"]);
-main = new Element(["main"]),
-aside = new Element(["aside"]),
-footer = new Element(["footer"]);
-
-// Add nodes to the body element.
-header.init(document.body);
-nav.init(document.body);
-main.init(document.body);
-aside.init(document.body);
-footer.init(document.body);
-
-// Set objects inner html?
-header.add([ ["span", { id: "pageName" }, "frontendjs"], ["span", { id: "pageDomain" }, ".org"] ]);
-nav.add([ ["home","Home"], ["docs","Docs"] ]);
-footer.add(["span", "GNU GENERAL PUBLIC LICENSE v3"]);
+var header = new Element(["header"]);
+header.r();
+header.add(["p","Works!"]);
