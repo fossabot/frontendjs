@@ -1,11 +1,11 @@
 // Is array?
-function isArray(array){ return array instanceof Array; }
+function isArray(x){ return x instanceof Array; }
 
 // Is string?
-function isString(string){ return typeof string === 'string'; }
+function isString(x){ return typeof x === 'string'; }
 
 // Is string?
-function isObject(object){ return typeof object === 'object'; }
+function isObject(x){ return typeof x === 'object'; }
 
 // Create a element node.
 function create(array){
@@ -50,7 +50,8 @@ function create(array){
     return nodes;
   }
 
-  if( isString(arr0) ){
+  if( !isString(arr0) ) return;
+
     let node = document.createElement(arr0),
         i = 1;
 
@@ -69,6 +70,5 @@ function create(array){
       else node.appendChild( document.createTextNode(array[i]) );
     }
 
-      return node;
-  }
+    return node;
 }

@@ -16,8 +16,8 @@ Element.prototype.r = function(node = document.body){
 Element.prototype.add = function(array){
   // Create a node and store it as "nodes"
   let nodes = create(array);
-  // If nodes (single) is of type object, add it to the parent node.
-  if( typeof nodes === "object" ) this.node.appendChild(nodes);
   // If nodes (multi) is of type array, loop the array of nodes into the parent node.
-  if( nodes instanceof Array ) nodes.forEach(function(node){ this.node.appendChild(node); });
+  if( nodes instanceof Array ) for(let node of nodes) this.node.appendChild(node);
+  // If nodes (single) is of type object, add it to the parent node.
+  else this.node.appendChild(nodes);
 }

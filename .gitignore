@@ -51,5 +51,7 @@ Thumbs.db
 
 # DEMO #
 ######################
-.html
-.css
+index.js
+index.html
+*.html
+*.css
