@@ -1,3 +1,4 @@
+"use strict";
 // Is array?
 function isArray(x){ return x instanceof Array; }
 

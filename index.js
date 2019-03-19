@@ -20,6 +20,20 @@
 // main.add(["a", { href: "docs.html", target:"_blank" }, "Documentation"]);
 // main.r();
 
-var footer = new Element(["footer"]);
-footer.add([["span", "my"], ["span", "footer!"]]);
+var
+header = new Element(["header"]),
+main = new Element(["main"]),
+aside = new Element(["aside"]),
+footer = new Element(["footer"]);
+
+header.r();
+main.r();
+aside.r();
 footer.r();
+
+header.add(["h1", ["span", "frontend"], ["span", { style:"color: green;" }, ".js"]]);
+main.add(["span", "This is my main."]);
+aside.add(["span", "This is my aside."]);
+footer.add(["span", "This is my footer."]);
+
+aside.hide();
