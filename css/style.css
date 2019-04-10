@@ -1,0 +1,5 @@
+*:not(title){font-family:arial;padding:0;margin:0;display:block}
+nav a{
+  display: inline-flex;
+  padding: .5em;
+}

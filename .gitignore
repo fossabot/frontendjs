@@ -48,10 +48,3 @@ Thumbs.db
 .gitignore
 .htaccess
 /loginsystem
-
-# DEMO #
-######################
-index.js
-index.html
-*.html
-*.css
