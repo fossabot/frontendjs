@@ -44,7 +44,5 @@ Thumbs.db
 
 # Test #
 ######################
-/test
 .gitignore
 .htaccess
-/loginsystem

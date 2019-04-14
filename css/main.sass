@@ -1,0 +1,56 @@
+*
+  &:not(title)
+    font-family: arial
+    padding: 0
+    margin: 0
+    outline: 0
+    text-decoration: none
+
+body
+  overflow-x: hidden
+
+header
+  padding: .25em 1em
+  background: #333
+  color: #fff
+  #github
+    color: lime
+    float: right
+
+
+nav
+  display: inline-flex
+  width: calc(100vw - 2.75em)
+  padding: .5em 1em
+  border-bottom: 1px solid #333
+  a
+    color: #666
+    &:not(:first-child)
+      padding-left: .5em
+    &:hover
+      color: #000
+
+main
+  padding: 0 1em
+  h1
+    margin: 1em .5em
+  section
+    margin: 1em 0
+    padding: 1em
+    border: 1px solid #bbb
+    h2
+      margin-bottom: .25em
+      font-size: 1.25em
+    pre
+      font-family: Mono, monospace
+      background: #333
+      overflow: auto
+      code
+        display: flex
+        padding: 0 1em
+        color: #fff
+        font-family: inherit
+        &:first-of-type
+          padding-top: 1em
+        &:last-of-type
+          padding-bottom: 1em

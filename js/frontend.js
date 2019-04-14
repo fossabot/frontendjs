@@ -57,6 +57,13 @@ Element.prototype.init = function( node = document.body ){
   node.appendChild( this.node );
 }
 
+// Set the text of a node element.
+// Use when there is already a text defined. If there is no text node, use the .text(); method. setText uses the clear(); method that checks and deletes existing child nodes.
+Element.prototype.setText = function( string ){
+  this.clear();
+  this.node.appendChild( document.createTextNode(string) );
+}
+
 // Insert text to a element.
 Element.prototype.text = function( string ){
   this.node.appendChild( document.createTextNode(string) );
@@ -111,21 +118,56 @@ Element.prototype.getNodes = function( string ){
   return this.node.childNodes;
 }
 
+// Finds node elements with the specified tag.
+// Returns an array of node elements.
 Element.prototype.findNode = function( string ){
-  let nodes = this.node.childNodes;
-  let found = [];
-  for( let node of nodes ){
-    let tag = node.nodeName;
-    if( tag === string ) found.push(node);
-  }
+  let nodes = this.node.childNodes,
+      found = [];
+
+  for( let node of nodes ) if( node.nodeName === string ) found.push(node);
+
   return found;
 }
 
-// addEventListener
-Element.prototype.on = function( method, func){
-  this.node.addEventListener(method, function(){
-    func();
+// add event listeners to an element instance.
+Element.prototype.on = function( method, func ){
+  this.node.addEventListener( method, function(){ func(); });
+}
+
+// Toggle functions
+/* Example
+var testBtn = new Element(["button", "Light"]);
+testBtn.init(main.node)
+
+testBtn.toggle(
+  function(){ console.log("a"); },
+  function(){ console.log("b"); }
+);
+*/
+Element.prototype.toggle = function( a, b ){
+  this.node.addEventListener( "click", function(){
+    if( this.toggle == false ){
+      this.toggle = true;
+      b();
+    }
+    else{
+      this.toggle = false;
+      a();
+    }
   });
+}
+
+// add event listeners on all elements inside the array. Made to use with "findNode("string")" method.
+/*
+var nav = new Element(["nav"]);
+nav.init();
+nav.add( [ ["a"],["a"] ] );
+
+nav.findNode("A").onAll("click", function(){
+  console.log("CLICKED");
+});
+*/Array.prototype.onAll = function( method, func ){
+  for( let value of this ) value.addEventListener( method, function(){ func(); });
 }
 
 function loadPage(){
