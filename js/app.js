@@ -1,10 +1,15 @@
-var header = new Element(["header"]);
-var nav = new Element(["nav"]);
-var main = new Element(["main"]);
+var conf = {
+  domain: "FrontendJS"
+};
 
-header.add([["font", { id: "title" }, "frontend.js"],["a", { id:"github", href:"https://github.com/damiantoczek/frontendjs", target: "_blank" }, "Github.com"]]);
-nav.add([["a", { href: "#home" }, "Home"],["a", { href: "#about" }, "About"]]);
+var nav = new Node(["nav"]);
+var main = new Node(["main"]);
 
-header.init();
+nav.add([
+  ["a", { href:"#home" }, "Home"],
+  ["a", { href:"#signup" }, "Signup"],
+  ["a", { href:"#slideshow" }, "Slideshow"]
+]);
+
 nav.init();
 main.init();

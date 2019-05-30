@@ -1,56 +1,72 @@
 *
-  &:not(title)
-    font-family: arial
-    padding: 0
-    margin: 0
-    outline: 0
-    text-decoration: none
+  font-family: arial
+  padding: 0
+  margin: 0
+  border: 0
+  outline: 0
+  text-decoration: none
+  font-size: 16px
 
-body
-  overflow-x: hidden
+button, a, input[type=submit]
+  cursor: pointer
 
-header
-  padding: .25em 1em
-  background: #333
-  color: #fff
-  #github
-    color: lime
-    float: right
+html,body
+  height: 100%
+  width: 100%
+
+main
+  h1
+    padding: 1rem
+    font-size: 2rem
+  p,a
+    padding: 0 1rem
 
 
 nav
-  display: inline-flex
-  width: calc(100vw - 2.75em)
-  padding: .5em 1em
-  border-bottom: 1px solid #333
+  display: flex
+  background: #333
+  color: #fff
   a
-    color: #666
-    &:not(:first-child)
-      padding-left: .5em
-    &:hover
-      color: #000
+    color: inherit
+    padding: .3rem
 
-main
-  padding: 0 1em
+
+.signup
+  display: table
+  margin: calc(35vh - 100px) auto 0 auto
+  padding: 2rem
+  background: #fff
+  box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1)
+  border-radius: 1rem
   h1
-    margin: 1em .5em
-  section
-    margin: 1em 0
-    padding: 1em
-    border: 1px solid #bbb
-    h2
-      margin-bottom: .25em
-      font-size: 1.25em
-    pre
-      font-family: Mono, monospace
+    font-size: 2rem
+    margin-bottom: 1rem
+  label, input
+    display: block
+  input
+    transition: all .5s ease-in-out
+    padding: .15rem .5rem
+    &:focus:not([type=submit])
+      border-color: #000
+    &:not([type=submit])
+      border-bottom: 1px solid #ddd
+    &[type=submit]
       background: #333
-      overflow: auto
-      code
-        display: flex
-        padding: 0 1em
-        color: #fff
-        font-family: inherit
-        &:first-of-type
-          padding-top: 1em
-        &:last-of-type
-          padding-bottom: 1em
+      color: #fff
+      width: 100%
+      margin-top: 2rem
+      padding: .25rem .5rem
+      border-radius: 1rem
+
+slideshow
+  display: flex
+  img
+    margin: 0 auto
+    max-width: 80%
+  button
+    width: 2rem
+    background: rgba(0,0,0,0.05)
+    transition: all ease-in-out .3s
+    font-weight: bold
+    &:hover
+      background-color: rgba(0,0,0,0.3)
