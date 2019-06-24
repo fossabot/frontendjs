@@ -1,41 +1,41 @@
 "use strict";
 
 class Node{
-    constructor( array ){
-        this.node = this.createSingleNode( array );
+    constructor( element ){
+        if( typeof element == "string" ) this.node = document.createElement( element );
+        else this.node = this.createSingleNode( element );
     }
 
     createSingleNode( array ){
         /*
             ["div",{ className: "hello" }, "textNode"]
             <div class="hello">textNode"</div>
-    
+
             ["div",{ className: "hello" }, ["p", "text"] ]
             <div class="hello"><p>textNode</p></div>
         */
-    
+
         let node = document.createElement( array[0] ); // Let node be the parent element node.
-    
+
         // Handle normal arrays like:
         // ["div", "my Div"];
         for( let i = 1, l = array.length; i < l; i++ ){ // Loop thru the single array and get all the values like string, objects and arrays.
-            
-            if( array[i] instanceof Array ){
-                node.appendChild( this.createSingleNode(array[i]) ); // If the value is an array, append the created node to the parent node.
-            }
-    
+
+            // If the value is an array, append the created node to the parent node.
+            if( array[i] instanceof Array ) node.appendChild( this.createSingleNode(array[i]) );
+
             // If the array[i] is a object, it's a list of attributes, add those attributes to the created element node.
             if( typeof array[i] === "object" ){
-                let keys = Object.keys( array[i] ); // Get an array of object keys.
-                for( let i = 0, l = keys.length; i < l; i++ )  node[ keys[i] ] = array[i][ keys[i] ]; // If the array[i] is an object, loop thru the object and add the key:array[i] pairs as attributes to the node element. (object)
+                // If the array[i] is an object, loop thru the object and add the key:array[i] pairs as attributes to the node element. (object)
+                for( let value of Object.keys( array[i] ) ) node[ value ] = array[i][value];
                 continue;
             }
-    
+
             // If string is a node (except [0]) create a text node.
             if( typeof array[i] === "string" ) node.appendChild( document.createTextNode( array[i] ) ); // else if, the array[i] is a string and the node variable has been set, create a text node and append it to the parent node.
-            
+
         }
-    
+
         // Return a node element.
         return node;
     }
@@ -47,22 +47,22 @@ class Node{
         //     ["div", { className: "world" }, "World!"]
         // ]);
         // console.log(nodes);
-        // for( let value of nodes ){    
+        // for( let value of nodes ){
         //     document.body.appendChild( value );
         // }
         // <div class"hello">Hello</div><div class="world">World!</div>
-    
+
         let node = [];
         // Handling multidimensional arrays like:
         // [["div", "My Div."], ["p", "My paragraph."]];
         if( array[0] instanceof Array ){ // If the first value is an array...
-    
+
             for( let i = 0, l = array.length; i < l; i++ ) node.push( this.createSingleNode( array[i] ) ); // Loop thru the array, get the values that are array and loop them into the node variable.
             return node; // Return an array of created node elements.
             // Info: Needs a loop to be appended:
             // myNodes.forEach(function(node){ document.body.appendChild(node); });
         }
-    
+
         return node;
     }
 
@@ -70,7 +70,22 @@ class Node{
     init( targetNode = document.body ){
         targetNode.appendChild( this.node );
     }
-    
+
+    // Append this element to a node.
+    initNode( nodeName ){
+      nodeName.node.appendChild( this.node );
+    }
+
+    // Append this element to a id element.
+    initId( idName ){
+      document.getElementById( idName ).appendChild( this.node );
+    }
+
+    // Append this element to a tag element.
+    initTag( tagName ){
+      document.getElementsByTagName( tagName )[0].appendChild( this.node );
+    }
+
     // Removes all child nodes from within the parent (this.node) element.
     clear(){
         while( this.node.lastChild ) this.node.removeChild( this.node.lastChild );
@@ -104,6 +119,12 @@ class Node{
     setText( string ){
         this.clear();
         this.text(string);
+    }
+
+    on( method, func ){
+      this.node.addEventListener(method, function(){
+        func();
+      });
     }
 }
 
@@ -187,7 +208,7 @@ class Slideshow extends Node{
                 this.img.load( this.config.folder + this.images[ index ] ); // load the thumbnail image inside the main image.
                 this.index = parseInt(index); // set the slideshow index to the thumbnail index. Must be parsed as int.
             });
-            
+
             // add images(thumbnails) to the thumbnail container.
             this.thumbnails.appendChild( img );
         }
