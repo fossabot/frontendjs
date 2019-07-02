@@ -1,5 +1,10 @@
 "use strict";
 
+Array.prototype.remove = function(element){
+  var index = this.indexOf(element);
+  this.splice(index,1);
+}
+
 function ajax (method, path, func){
   let req = new XMLHttpRequest();
   req.onreadystatechange = function(){
@@ -35,7 +40,7 @@ function createNode (array){
   }
 
   node = [];
-  for(var i = 0, l = array.length; i < l; i++) node.push(createNode(array[i]));
+  for(var i = 0; i < array.length; i++) node.push(createNode(array[i]));
   return node;
 }
 
@@ -174,7 +179,7 @@ class Slideshow extends Node {
     this.thumbnails.className = "ssthumbnails";
 
     // loop thru the image array to create thumbnails.
-    for(let i = 0, l = this.images.length; i < l; i++){
+    for(let i = 0; i < this.images.length; i++){
       // create a thumbnail image element.
       let img = document.createElement("img");
 
@@ -252,37 +257,58 @@ class Table {
 class Search extends Node {
   constructor (attr){
     super(["input", attr]);
-    this.in = attr.in; // Let for be the target to search inside.
+    this.in = attr.in; // Let "in" be the target where the search will happen.
+
+    this.findCell = function(row, keyword){
+      var foundKeywords = [];
+      var cell = row.children;
+
+      // Loop thru each cell <td>
+      for(var i = 0; i < cell.length; i++){
+        var text = cell[i].textContent;
+        // Loop each keyword and compare it to the cell text with a regexp.
+
+        //if(keyword.length < 1) break;
+        for(var j = 0; j < keyword.length; j++){
+          var regex = new RegExp(keyword[j], "i");
+          if(regex.test(text)){
+            foundKeywords.push(keyword[j]);
+          }
+        }
+      }
+
+      if(foundKeywords.length > 0) return foundKeywords;
+      return false;
+    };
 
     this.node.oninput = ()=>{
-      // Let input be the string we search for.
-      var input = this.node.value;
-      var table = document.getElementById(this.in);
       // Let tbody be the content to search in.
-      var tbody = table.getElementsByTagName("tbody")[0];
-      // Let rows be the collection of all rows.
-      var rows = tbody.getElementsByTagName("tr");
-      // Loop thru each rows inside the tbody.
-      for(var i = 0; i < rows.length; i++){
-        // Get all child nodes of the rows.
-        var childNodes = rows[i].children;
+      var tbody = document.getElementById(this.in).getElementsByTagName("tbody")[0];
+      // Let tr be the collection of all tr elements.
+      var tr = tbody.getElementsByTagName("tr");
+      // Let keywords be an array of keywords to search for.
+      // filter() removes all whitespaces and empty strings.
+      var keyword = this.node.value.split(" ").filter(value => value != "");
+      // Store all found rows in foundRows.
+      var foundRows = [];
+      // Loop thru each row <tr>
+      for(var i = 0; i < tr.length; i++){
+        var row = tr[i];
+        // Make each row opaque (makes more sense in the next loop)
+        row.className = "opaque";
+        // Let result be the return of the findCell function. It returns false or an array of found keywords.
+        var result = this.findCell(row, keyword);
+        // If returned keywords match the searched keywords
+        // push the row to the foundRows array.
+        if(result.length >= keyword.length) foundRows.push(row);
+      }
 
-        // Store all matched <td> elements within the rows (<tr>).
-        var matches = [];
-
-        // Loop thru each <td> element.
-        for (var j = 0, l = childNodes.length; j < l; j++) {
-          var value = childNodes[j].textContent;
-          var regex = new RegExp(input, "i");
-          var result = regex.test(value);
-          if( result == true) matches.push(value);
-        }
-
-        if( matches.length > 0 ){
-          rows[i].className = "";
-
-        }
-        else rows[i].className = "opaque";
+      // Loop thru all foundRows and "highlight" them in some way.
+      for(i = 0; i < foundRows.length; i++){
+        // Remove the class("opaque") from the found row that matched our search.
+        foundRows[i].className = "";
+        // Move the found row to the top of tbody.
+        tbody.insertBefore(foundRows[i], tbody.firstChild);
       }
     };
   }
