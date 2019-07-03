@@ -1,9 +1,12 @@
 "use strict";
-
 Array.prototype.remove = function(element){
   var index = this.indexOf(element);
   this.splice(index,1);
-}
+};
+Array.prototype.pushUnique = function(value){
+  var result = this.indexOf(value);
+  if(result === -1) this.push(value);
+};
 
 function ajax (method, path, func){
   let req = new XMLHttpRequest();
@@ -99,7 +102,7 @@ class Element extends Node {
   // Clear the node before adding nodes.
   set (array){
     this.clear();
-    if(array[0] instanceof Array) this.addM(array);
+    if(array[0] instanceof Array) this.add(array);
     return this.add(array);
   }
 
@@ -259,29 +262,33 @@ class Search extends Node {
     super(["input", attr]);
     this.in = attr.in; // Let "in" be the target where the search will happen.
 
-    this.findCell = function(row, keyword){
-      var foundKeywords = [];
+    this.findKeyword = function(row, array){
+      // Let keywords be the array of values we search for.
+      var keywords = array;
+      // Let collection be the array of cell values.
+      var collection = [];
+      // Let cell be a list of row cells (children <td>).
       var cell = row.children;
+      // Get the text of a cell and add it to the collection.
+      for(var i = 0; i < cell.length; i++) collection.push( cell[i].textContent.toLowerCase() );
 
-      // Loop thru each cell <td>
-      for(var i = 0; i < cell.length; i++){
-        var text = cell[i].textContent;
-        // Loop each keyword and compare it to the cell text with a regexp.
+      var matchingKeywords = [];
 
-        //if(keyword.length < 1) break;
-        for(var j = 0; j < keyword.length; j++){
-          var regex = new RegExp(keyword[j], "i");
-          if(regex.test(text)){
-            foundKeywords.push(keyword[j]);
-          }
+      // Loop thru each keyword and chek if the regexp exists inside the collection array.
+      for(i = 0; i < keywords.length; i++){
+        var regex = new RegExp( keywords[i] );
+        for(var j = 0; j < collection.length; j++){
+          var test = regex.test(collection[j]);
+          if(test) matchingKeywords.pushUnique(keywords[i]);
         }
       }
 
-      if(foundKeywords.length > 0) return foundKeywords;
-      return false;
+      return matchingKeywords.length === keywords.length ? true : false;
     };
 
     this.node.oninput = ()=>{
+      // Make everything lowercase.
+      this.node.value = this.node.value.toLowerCase();
       // Let tbody be the content to search in.
       var tbody = document.getElementById(this.in).getElementsByTagName("tbody")[0];
       // Let tr be the collection of all tr elements.
@@ -291,24 +298,18 @@ class Search extends Node {
       var keyword = this.node.value.split(" ").filter(value => value != "");
       // Store all found rows in foundRows.
       var foundRows = [];
+
       // Loop thru each row <tr>
       for(var i = 0; i < tr.length; i++){
         var row = tr[i];
-        // Make each row opaque (makes more sense in the next loop)
-        row.className = "opaque";
-        // Let result be the return of the findCell function. It returns false or an array of found keywords.
-        var result = this.findCell(row, keyword);
-        // If returned keywords match the searched keywords
-        // push the row to the foundRows array.
-        if(result.length >= keyword.length) foundRows.push(row);
-      }
 
-      // Loop thru all foundRows and "highlight" them in some way.
-      for(i = 0; i < foundRows.length; i++){
-        // Remove the class("opaque") from the found row that matched our search.
-        foundRows[i].className = "";
-        // Move the found row to the top of tbody.
-        tbody.insertBefore(foundRows[i], tbody.firstChild);
+        // Let result be the return of the findKeyword function. It returns false or an array of found keywords.
+        var result = this.findKeyword(row, keyword);
+        if(!result) row.className = "opaque";
+        else{
+          row.className = "";
+          tbody.insertBefore(row, tbody.firstChild);
+        }
       }
     };
   }
