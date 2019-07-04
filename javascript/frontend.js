@@ -102,8 +102,7 @@ class Element extends Node {
   // Clear the node before adding nodes.
   set (array){
     this.clear();
-    if(array[0] instanceof Array) this.add(array);
-    return this.add(array);
+    this.add(array);
   }
 
   // Add a text node to this.node.
