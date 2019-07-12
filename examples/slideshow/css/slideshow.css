@@ -1,11 +1,21 @@
-/*
-Mobile:
-    Samsung S10 408x772
-Desktop:
-    1920px 1080p
-    2560px 1440p
-    3840px 4K (2160p)
-*/
+*{
+    font-family: Arial;
+}
+
+body{
+    background: #333;
+    color: #fff;
+}
+
+body > div{
+    display: table;
+    margin: 0 auto;
+    padding-bottom: 4em;
+}
+
+a{
+    color: aqua;
+}
 
 @media only screen and (max-width: 499px){
     button::-moz-focus-inner {

@@ -1,13 +1,12 @@
 "use strict";
-Array.prototype.remove = function(element){
-  var index = this.indexOf(element);
+Array.prototype.remove = function(value){
+  var index = this.indexOf(value);
   this.splice(index,1);
 };
 Array.prototype.pushUnique = function(value){
   var result = this.indexOf(value);
   if(result === -1) this.push(value);
 };
-
 function ajax (method, path, func){
   let req = new XMLHttpRequest();
   req.onreadystatechange = function(){
@@ -102,7 +101,8 @@ class Element extends Node {
   // Clear the node before adding nodes.
   set (array){
     this.clear();
-    this.add(array);
+    if(array[0] instanceof Array) this.add(array);
+    return this.add(array);
   }
 
   // Add a text node to this.node.
