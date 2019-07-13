@@ -226,8 +226,12 @@ class Table {
   constructor (attr){
     this.node = createNode(["table", attr]);
     this.thead = document.createElement("thead");
+    this.tresult = document.createElement("tresult");
     this.tbody = document.createElement("tbody");
+
+    // Append elements.
     this.node.appendChild(this.thead);
+    this.node.appendChild(this.tresult);
     this.node.appendChild(this.tbody);
   }
 
@@ -237,6 +241,10 @@ class Table {
 
   theadAddRow (array){
     this.thead.appendChild( this.createRow("th", array) );
+  }
+
+  tresultAddRow (array){
+    this.tresult.appendChild( this.createRow("td", array) );
   }
 
   tbodyAddRow (array){
@@ -253,6 +261,25 @@ class Table {
       tr.appendChild(td);
     }
     return tr;
+  }
+
+  swap(array){
+    var row = this.tbody.childNodes;
+    var index = 0;
+    var l = row.length;
+
+    for(var i = 0; i < l; i++){
+      if(array[index] === undefined){
+        this = null;
+      }else{
+        var td = row[i].childNodes;
+
+        for(var j = 0; j < td.length; j++){
+          td[j].textContent = array[index];
+          index++;
+        }
+      }
+    }
   }
 }
 
@@ -304,9 +331,10 @@ class Search extends Node {
 
         // Let result be the return of the findKeyword function. It returns false or an array of found keywords.
         var result = this.findKeyword(row, keyword);
-        if(!result) row.className = "opaque";
-        else{
-          row.className = "";
+        if(!result){
+          row.className = "nomatch";
+        }else{
+          row.className = "match";
           tbody.insertBefore(row, tbody.firstChild);
         }
       }
