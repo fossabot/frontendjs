@@ -265,21 +265,24 @@ class Table {
 
   swap(array){
     var row = this.tbody.childNodes;
-    var index = 0;
-    var l = row.length;
+    var row_i = 0;
+    var cell_i = 0;
 
-    for(var i = 0; i < l; i++){
-      if(array[index] === undefined){
-        this = null;
-      }else{
-        var td = row[i].childNodes;
+    for(; row_i < row.length; row_i++){
+      if(array[cell_i] === undefined) break;
 
-        for(var j = 0; j < td.length; j++){
-          td[j].textContent = array[index];
-          index++;
-        }
+      var td = row[row_i].childNodes;
+      for(; cell_i < td.length; cell_i++){
+        td[cell_i].textContent = array[cell_i];
       }
     }
+
+    var l = this.tbody.childNodes.length;
+    while(l > row_i){
+      this.tbody.removeChild(this.tbody.lastChild)
+      l--;
+    }
+    
   }
 }
 
