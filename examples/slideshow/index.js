@@ -1,9 +1,8 @@
-var div = new Element(["div"]);
-div.add([
-    ["h1", "Slideshow example"],
-    ["p", "Feedback is welcome!"]
-]);
-div.initId('test');
-
-var slideshow = new Slideshow(["case.jpg","pc.jpg"], { folder: "./img/" });
+var slideshow = new Slideshow(
+    ["case.jpg","pc.jpg"],
+    { folder: "./img/", controls: true, thumbnails: true }
+);
 slideshow.init();
+
+var test = document.createElement("img");
+document.body.appendChild(test);

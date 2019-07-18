@@ -18,43 +18,45 @@ a{
 }
 
 @media only screen and (max-width: 499px){
-    button::-moz-focus-inner {
+    slideshow wrap button::-moz-focus-inner {
         border: 0;
     }
 }
 
 @media only screen and (min-width: 500px){
-    .ssmain button:hover{
+    slideshow wrap button:hover{
         background-color: #999;
     }
 }
 
 slideshow{
-    display: block;
+    display: flex;
+    flex-flow: column;
     width: 80%;
     max-width: 600px;
     margin:0 auto;
 }
 
-slideshow div{
+slideshow wrap, slideshow thumbnails{
     background-color: #fff;
 }
 
 /* MAIN */
 
-slideshow .ssmain{
+slideshow wrap{
     display: flex;
 }
 
-.ssmain button{
+slideshow wrap button{
     border: none;
     outline: none;
     background-color: transparent;
     transition: background-color ease-in-out .1s;
+    cursor: pointer;
     flex: 1;
 }
 
-.ssmain img{
+slideshow wrap img{
     padding: 1em;
     flex: 8;
     height:1%;
@@ -63,11 +65,11 @@ slideshow .ssmain{
 
 /* THUMBNAILS*/
 
-slideshow .ssthumbnails{
-    padding: .5em;
-    margin-top: 1em;
+slideshow thumbnails{
+    margin-top: .5em;
 }
 
-.ssthumbnails img{
+thumbnails img{
+    padding: .5em;
     height: 80px;
 }
