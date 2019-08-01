@@ -1,18 +1,18 @@
 var database = [
-  {name:"Damian", age:25, hobby:"coding"},
-  {name:"Kevin", age:101, hobby:"Being old"},
-  {name:"Philip", age:20, hobby:"Tuning cars"}
+    {name:"Damian",age:"25",food:"pizza"},
+    {name:"Kevin",age:"14",food:"pizza"},
+    {name:"David",age:"25",food:"burger"},
+    {name:"Raul",age:"25",food:"burger"},
+    {name:"Raul",age:"14",food:"pizza"}
 ];
 
-// Table
+// Table dump
+var dumpTable = new Table();
+dumpTable.dump(database);
+dumpTable.init();
+
+// Table the harder way :p
 var myTable = new Table({search:true});
-
-myTable.thead.add(["Name", "Age", "Hobby"]);
-myTable.tbody.add(["Damian", 25, "Coding"]);
-myTable.tbody.add(["Kevin", 50, "Watching TV"]);
-myTable.tbody.add(["Paul", 13, "Coding"]);
-myTable.tbody.add(["KeViN", 25, "Tuning Cars"]);
-myTable.tbody.add(["Philip", 13, "Coding"]);
-myTable.tbody.add(["Damian", 50, "Tuning Cars"]);
-
+myTable.thead.add(["Name","Age","Fav.Food"]);
+for(var obj of database) myTable.tbody.add([obj.name, obj.age, obj.food]);
 myTable.init();
