@@ -8,13 +8,8 @@ option1_1.init();
 var option2 = createNode(["div", ["p","Hello World! 2"]]);
 document.body.appendChild(option2);
 
-var option3 = new Element(["div"]);
-var option3_p = new Element(["p"]);
-option3_p.initNode(option3);
-option3.init();
-option3_p.text("Hello World! 3");
 
-var option4 = new Element(["div"]);
-var option4_arr = ["Hello ","World! ", "4"];
-for(let value of option4_arr) option4.text(value);
-option4.init();
+var option3 = new Element(["div"]);
+var option3_arr = ["Hello ","World! ", "3"];
+for(let value of option3_arr) option3.text(value);
+option3.init();
