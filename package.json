@@ -1,0 +1,11 @@
+{
+  "name": "jss",
+  "version": "1.0.0",
+  "description": "Superset of javascript DOM classes.",
+  "main": "build.js",
+  "author": "Damian Toczek",
+  "license": "MIT",
+  "scripts": {
+    "build": "node build.js"
+  }
+}
